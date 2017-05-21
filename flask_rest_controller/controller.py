@@ -6,7 +6,7 @@ except:
     import json
 
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import jsonschema
 
 from flask import redirect, url_for, render_template, session, request, abort, current_app
@@ -57,7 +57,7 @@ class JsonRender(BaseRender):
     def _detect_schema_value(self):
         schema = None
 
-        for key in self.schema.keys():
+        for key in list(self.schema.keys()):
             if not key.lower() == self.into:
                 continue
             schema = self.schema[key]
@@ -200,5 +200,5 @@ class Controller(TemplateRender, JsonRender, BaseHandler):
             pass
 
         query = [(k, v) for k, v in sorted(params.items())]
-        params = urllib.urlencode(query)
+        params = urllib.parse.urlencode(query)
         return redirect("{0}?{1}".format(uri, params))
